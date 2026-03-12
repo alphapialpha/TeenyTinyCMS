@@ -23,7 +23,7 @@ function e(mixed $value): string
 function active_theme(): string
 {
     $theme = config('active_theme', 'default');
-    if (!preg_match('/^[a-z0-9][a-z0-9_-]*$/', $theme)) {
+    if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/', $theme)) {
         return 'default';
     }
     return $theme;
