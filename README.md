@@ -61,21 +61,22 @@ Fill in the form:
 
 - **Site title** — shown in the header and `<title>` tag
 - **Default language** — two-to-five-letter ISO code, e.g. `en`
+- **Theme** — choose the active theme from all available theme folders
 - **Database** — SQLite is the zero-configuration option; choose MySQL/MariaDB if you need concurrent writes or are on a shared host that does not allow SQLite
 - **Admin credentials** — the username and password you will use to log in at `/admin`
 - **Copyright notice** — optional; shown in the footer. Defaults to site title if left blank.
 
-The installer writes `config/config.php` and initialises the database schema. Once it completes, delete or restrict access to `install.php` for security. To reset your installation, simply delete config/config.php and rerun install.php.
+The installer writes `config/config.php`, initialises the database schema, and automatically builds the site cache. Once it completes, you can visit the site immediately. Build stats are shown in the installer success message. Delete or restrict access to `install.php` for security. To reset your installation, simply delete config/config.php and rerun install.php.
 
 ### 3. Build the cache
 
-Either log in to `/admin` and click **Rebuild site**, or run from the command line:
+After install, the site cache is already built and ready. If you change content, templates, or config, log in to `/admin` and click **Rebuild site**, or run from the command line:
 
     php app/builder.php
 
-The builder prints how many files it built, how many DB rows and cache files it pruned, and whether any errors occurred.
+The builder prints how many files it built, how many DB rows and cache files it pruned, orphan tags, errors, and build time.
 
-> **Important:** After installation, you must run a first build (either in the admin backend or via CLI) before the site will work. If you skip this step, the site will show 404 errors because no cache files exist yet.
+> **Important:** Rebuild after any change to content files, templates, or config. Site title, default language, and theme are all baked into the cached files at build time.
 
 ---
 
@@ -229,31 +230,7 @@ Use the theme's `assets/` for anything that belongs to the design rather than th
 
 ## Themes
 
-All themes live under `themes/`. Each theme is a folder containing its own `templates/` and `assets/` subdirectories.
-
-    themes/
-    └── default/
-        ├── assets/
-        │   ├── css/
-        │   │   └── app.css
-        │   ├── js/
-        │   │   └── app.js
-        │   └── img/
-        └── templates/
-            ├── layout.php
-            ├── home_template.php
-            ├── blog_template.php
-            ├── page_template.php
-            ├── post_template.php
-            ├── search_template.php
-            ├── tag_template.php
-            └── partials/
-                ├── header.php
-                ├── footer.php
-                ├── nav.php
-                ├── post_teaser.php
-                ├── tag_list.php
-                └── language_switcher.php
+All themes live under `themes/`. Each theme is a folder containing its own `templates/` and `assets/` subdirectories. Theme folder names can include uppercase and lowercase letters, digits, hyphens, and underscores (e.g. "AlphaPiAlpha").
 
 ### Creating a new theme
 
@@ -288,7 +265,7 @@ Theme folder names must be lowercase letters, digits, hyphens, and underscores o
 
 If a required template file is missing, the builder will throw an error at build time.
 
-To activate the theme, log in to `/admin` and select it from the **Active Theme** dropdown, then click **Apply & rebuild**. This rewrites `active_theme` in `config/config.php` and rebuilds the full cache in one step.
+To activate the theme, log in to `/admin` and select it from the **Active Theme** dropdown, then click **Apply & rebuild**. This rewrites `active_theme` in `config/config.php` and rebuilds the full cache in one step. The admin dashboard shows detailed build stats after theme change and rebuild: files built, pruned DB rows, orphan tags, errors, and build time.
 
 Alternatively, edit `config/config.php` directly and set:
 
@@ -477,7 +454,7 @@ These keys are available instantly via `t('gallery_caption', $lang)` in any of t
 
 The dashboard shows a count of pages, posts, tags, and media files. It has two action cards:
 
-- **Active Theme** — dropdown listing all theme folders found in `themes/`. Select a theme and click **Apply & rebuild** to switch immediately. The rebuild time in milliseconds is shown in the confirmation message.
+- **Active Theme** — dropdown listing all theme folders found in `themes/`. Select a theme and click **Apply & rebuild** to switch immediately. Switching themes triggers a full rebuild and shows detailed build stats: files built, pruned DB rows, orphan tags, errors, and build time.
 - **Rebuild Site Cache** — re-parses all Markdown, regenerates all cache files, prunes deleted content, and shows stats including how long it took.
 
 Both actions trigger the same full build that `php app/builder.php` runs from the command line.

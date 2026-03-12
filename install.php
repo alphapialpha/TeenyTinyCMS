@@ -43,6 +43,28 @@ function h(string $value): string
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+/** Scan themes/ directory and return array of theme folder names. */
+function available_themes(): array
+{
+    $dir = BASE_PATH . '/themes';
+    if (!is_dir($dir)) {
+        return ['default'];
+    }
+    $themes = [];
+    foreach (new DirectoryIterator($dir) as $item) {
+        if ($item->isDot() || !$item->isDir()) {
+            continue;
+        }
+        $name = $item->getFilename();
+        // A valid theme must contain a templates/ sub-directory
+        if (is_dir($dir . '/' . $name . '/templates')) {
+            $themes[] = $name;
+        }
+    }
+    sort($themes);
+    return $themes ?: ['default'];
+}
+
 /** Return list of paths that must be writable. */
 function required_writable_paths(): array
 {
@@ -131,6 +153,7 @@ function write_config(array $data): void
     $siteLang        = preg_replace('/[^a-z]/', '', strtolower($data['default_lang']));
     $siteTitle       = var_export($data['site_title'], true);
     $copyrightNotice = var_export($data['copyright_notice'] !== '' ? $data['copyright_notice'] : $data['site_title'], true);
+    $activeTheme     = var_export($data['active_theme'], true);
     $dsnExport       = var_export($dsn, true);
 
     $content = <<<PHP
@@ -142,7 +165,7 @@ return [
     'site_title'       => {$siteTitle},
     'copyright_notice' => {$copyrightNotice},
     'default_lang'     => '{$siteLang}',
-    'active_theme'     => 'default',
+    'active_theme'     => {$activeTheme},
     'blog_per_page'    => 9,
     'installed'    => true,
     'database' => [
@@ -175,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'site_title'       => trim($_POST['site_title']       ?? ''),
             'copyright_notice' => trim($_POST['copyright_notice'] ?? ''),
             'default_lang'     => trim($_POST['default_lang']     ?? 'en'),
+            'active_theme'     => trim($_POST['active_theme']     ?? 'default'),
             'db_driver'    => trim($_POST['db_driver']    ?? 'sqlite'),
             'db_host'      => trim($_POST['db_host']      ?? '127.0.0.1'),
             'db_port'      => trim($_POST['db_port']      ?? '3306'),
@@ -202,6 +226,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         if (!preg_match('/^[a-z]{2,5}$/', $data['default_lang'])) {
             $errors[] = 'Default language must be a valid language code (e.g. en, de, fr, es, pt-br — lowercase letters only, 2–5 characters).';
+        }
+        if (!in_array($data['active_theme'], available_themes(), true)) {
+            $errors[] = 'Invalid theme selected.';
         }
         if (!in_array($data['db_driver'], ['sqlite', 'mysql'], true)) {
             $errors[] = 'Invalid database driver.';
@@ -259,6 +286,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             insert_admin($pdo, $data['admin_user'], $data['admin_pass']);
             write_config($data);
             $success = true;
+
+            // Auto-build the site cache so the frontend works immediately
+            try {
+                require_once BASE_PATH . '/app/bootstrap.php';
+                require_once BASE_PATH . '/app/markdown.php';
+                require_once BASE_PATH . '/app/utils.php';
+                require_once BASE_PATH . '/app/builder.php';
+                $t0         = microtime(true);
+                $build_stats = build_all();
+                $build_time  = round((microtime(true) - $t0) * 1000);
+            } catch (Throwable $be) {
+                // Build failure is non-fatal — user can rebuild from admin
+                $build_stats = null;
+                $build_error = $be->getMessage();
+            }
         } catch (Throwable $e) {
             $errors[] = 'Setup failed: ' . $e->getMessage();
         }
@@ -271,6 +313,7 @@ $data = $data ?? [
     'site_title'       => '',
     'copyright_notice' => '',
     'default_lang'     => 'en',
+    'active_theme'     => 'default',
     'db_driver'   => 'sqlite',
     'db_host'     => '127.0.0.1',
     'db_port'     => '3306',
@@ -315,6 +358,15 @@ $data = $data ?? [
     <div class="success">
         <h2>Installation complete!</h2>
         <p>Your config has been written and the database has been initialised.</p>
+        <?php if (!empty($build_stats)): ?>
+            <p style="font-size:.9rem;color:#166534">
+                Site cache built: <?= (int) $build_stats['built'] ?> file(s). Pruned <?= (int) ($build_stats['pruned_db'] ?? 0) ?> DB row(s), <?= (int) ($build_stats['tags_pruned'] ?? 0) ?> orphan tag(s). Errors: <?= (int) $build_stats['errors'] ?>. Time: <?= (int) $build_time ?> ms.
+            </p>
+        <?php elseif (!empty($build_error)): ?>
+            <p style="font-size:.9rem;color:#991b1b">
+                Auto-build failed: <?= h($build_error) ?><br>You can rebuild manually from the admin dashboard.
+            </p>
+        <?php endif ?>
         <p>
             <a href="/admin/login.php">Go to admin login &rarr;</a>
         </p>
@@ -352,6 +404,13 @@ $data = $data ?? [
         <input type="text" id="default_lang" name="default_lang"
                value="<?= h($data['default_lang']) ?>"
                placeholder="en" maxlength="5" pattern="[a-z]{2,5}" required>
+
+        <label for="active_theme">Theme</label>
+        <select id="active_theme" name="active_theme">
+            <?php foreach (available_themes() as $theme): ?>
+                <option value="<?= h($theme) ?>" <?= ($data['active_theme'] ?? 'default') === $theme ? 'selected' : '' ?>><?= h($theme) ?></option>
+            <?php endforeach ?>
+        </select>
 
         <h2>Database</h2>
         <label for="db_driver">Database engine</label>

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'rebui
  */
 function _admin_valid_theme_name(string $name): bool
 {
-    return (bool) preg_match('/^[a-z0-9][a-z0-9_-]*$/', $name);
+    return (bool) preg_match('/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/', $name);
 }
 
 /** Return all valid theme names found as subdirectories of /themes/. */
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'set_t
                     $t0    = microtime(true);
                     $stats = build_all();
                     $elapsed = round((microtime(true) - $t0) * 1000);
-                    $build_message = 'success:Theme switched to "' . $new_theme . '" and cache rebuilt (' . $stats['built'] . ' file(s), ' . $elapsed . ' ms).';
+                    $build_message = 'success:Theme switched to "' . $new_theme . '".<br>Built ' . $stats['built'] . ' file(s). Pruned ' . ($stats['pruned_db'] ?? 0) . ' DB row(s), ' . ($stats['tags_pruned'] ?? 0) . ' orphan tag(s). Errors: ' . $stats['errors'] . '. Time: ' . $elapsed . ' ms.';
                 } catch (Throwable $e) {
                     $build_message = 'error:Theme saved but rebuild failed: ' . $e->getMessage();
                 }
@@ -174,7 +174,7 @@ $csrf = $_SESSION['csrf_token'];
 
     <?php if ($msg_text !== ''): ?>
         <div class="alert alert--<?= $msg_type === 'success' ? 'success' : 'error' ?>">
-            <?= e($msg_text) ?>
+            <?= nl2br(e(str_replace('<br>', "\n", $msg_text))) ?>
         </div>
     <?php endif ?>
 
