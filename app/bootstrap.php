@@ -1,8 +1,8 @@
 <?php
 /**
  * TeenyTinyCMS – Application bootstrap
- *
  * Loaded by index.php on every request.
+
  * Order matters: config → DB helpers → auth → template/content helpers.
  * The DB connection itself is lazy (opened on first db() call).
  */
