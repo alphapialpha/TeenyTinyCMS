@@ -73,6 +73,8 @@ Either log in to `/admin` and click **Rebuild site**, or run from the command li
 
 The builder prints how many files it built, how many DB rows and cache files it pruned, and whether any errors occurred.
 
+> **Important:** After installation, you must run a first build (either in the admin backend or via CLI) before the site will work. If you skip this step, the site will show 404 errors because no cache files exist yet.
+
 ---
 
 ## Content structure
