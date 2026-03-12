@@ -61,6 +61,7 @@ Fill in the form:
 - **Default language** — two-to-five-letter ISO code, e.g. `en`
 - **Database** — SQLite is the zero-configuration option; choose MySQL/MariaDB if you need concurrent writes or are on a shared host that does not allow SQLite
 - **Admin credentials** — the username and password you will use to log in at `/admin`
+- **Copyright notice** — optional; shown in the footer. Defaults to site title if left blank.
 
 The installer writes `config/config.php` and initialises the database schema. Once it completes, delete or protect `install.php` — the installer itself tells you this.
 
