@@ -144,7 +144,7 @@ All recognised fields:
 | `slug`     | all         | URL identifier. Lowercase letters, digits, hyphens, and optionally forward slashes for hierarchical URLs. Must be unique per language. |
 | `lang`     | all         | Two-to-five-letter language code matching the site's configured languages. |
 | `title`    | all         | The page or post title, used in `<title>` and headings. |
-| `date`     | posts       | Publication date in `YYYY-MM-DD` format. Used for sort order. |
+| `date`     | optional    | For posts: publication date in `YYYY-MM-DD` format (used for sort order). For pages: optional, used for "last changed" tracking and display if present. |
 | `author`   | posts       | Author name, displayed in the post teaser and post template. |
 | `tags`     | posts       | YAML list, e.g. `[news, travel, php]`. Creates tag index pages automatically. |
 | `template` | optional    | Override which template file is used. Defaults to `post` for posts and `page` for pages. |
