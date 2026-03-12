@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
-define('BASE_PATH', __DIR__ . '/..');
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', __DIR__ . '/..');
+}
 
 // 1. Config (may redirect to install.php if not installed)
 require_once BASE_PATH . '/app/config_loader.php';
