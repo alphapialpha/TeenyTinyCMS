@@ -6,6 +6,8 @@ A small, self-hosted CMS built with plain PHP 8.1. No framework, no Composer dep
 
 Content lives in Markdown files. Metadata and relationships live in a SQLite or MySQL database. Pages are pre-compiled to cached PHP files so every request is a plain file include — no query, no rendering on the fly.
 
+> **Out of the box:** TeenyTinyCMS comes with a full-featured default theme and example posts and pages. You can use the CMS immediately after install and build on the included content and design.
+
 ---
 
 ## How it works
