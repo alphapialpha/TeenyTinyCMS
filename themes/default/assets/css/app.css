@@ -191,7 +191,7 @@ main {
 
 /* ── Page template ────────────────────────────────────────────────── */
 .page {
-    max-width: var(--reading);
+    max-width: var(--container);
     margin: 0 auto;
     padding: 0 1.5rem;
 }
@@ -303,7 +303,7 @@ abbr[title] { text-decoration: underline dotted var(--gray); cursor: help; }
 
 /* ── Post template ────────────────────────────────────────────────── */
 .post {
-    max-width: var(--reading);
+    max-width: var(--container);
     margin: 0 auto;
     padding: 0 1.5rem;
 }
