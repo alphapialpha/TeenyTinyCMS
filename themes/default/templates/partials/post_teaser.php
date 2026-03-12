@@ -1,5 +1,6 @@
 <?php /** Post teaser partial. Variables: $post (slugs row array) */ ?>
 <article class="post-teaser">
+    <a class="post-teaser__link" href="<?= url_for('/blog/' . rawurlencode($post['slug']), $post['lang'] ?? 'en') ?>" aria-label="<?= e($post['title']) ?>"></a>
     <?php if (!empty($post['date'])): ?>
         <p class="post-teaser__date">
             <time datetime="<?= e($post['date']) ?>"><?= e($post['date']) ?></time>

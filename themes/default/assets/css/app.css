@@ -429,6 +429,8 @@ abbr[title] { text-decoration: underline dotted var(--gray); cursor: help; }
 
 /* ── Post teaser card ─────────────────────────────────────────────── */
 .post-teaser {
+    position: relative;
+    cursor: pointer;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -437,11 +439,18 @@ abbr[title] { text-decoration: underline dotted var(--gray); cursor: help; }
     flex-direction: column;
     transition: border-color .2s, box-shadow .2s, transform .2s;
 }
+.post-teaser__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: var(--radius);
+}
 .post-teaser:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
+.post-teaser:hover .post-teaser__title { color: var(--accent); }
 
 .post-teaser__date {
     font-size: .78rem;
@@ -463,8 +472,8 @@ abbr[title] { text-decoration: underline dotted var(--gray); cursor: help; }
 .post-teaser__title a {
     color: inherit;
     transition: color .15s;
+    pointer-events: none;
 }
-.post-teaser__title a:hover { color: var(--accent); }
 
 .post-teaser__meta {
     font-size: .8rem;
@@ -546,6 +555,7 @@ abbr[title] { text-decoration: underline dotted var(--gray); cursor: help; }
     background: linear-gradient(135deg, var(--bg-subtle) 0%, #eaf6fb 100%);
     border-bottom: 1px solid var(--border);
     padding: 4rem 1.5rem;
+    margin-top: -2.5rem;
     margin-bottom: 3.5rem;
 }
 .home-hero__inner {
