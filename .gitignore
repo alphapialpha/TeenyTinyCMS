@@ -1,0 +1,13 @@
+# Runtime data
+data/database.sqlite
+data/error.log
+
+# Generated cache (rebuild with php app/builder.php)
+cache/public/
+
+# Installation-generated config
+config/config.php
+
+# OS files
+.DS_Store
+Thumbs.db
