@@ -65,7 +65,7 @@ Fill in the form:
 - **Admin credentials** — the username and password you will use to log in at `/admin`
 - **Copyright notice** — optional; shown in the footer. Defaults to site title if left blank.
 
-The installer writes `config/config.php` and initialises the database schema. Once it completes, delete or protect `install.php` — the installer itself tells you this.
+The installer writes `config/config.php` and initialises the database schema. Once it completes, delete or restrict access to `install.php` for security. To reset your installation, simply delete config/config.php and rerun install.php.
 
 ### 3. Build the cache
 

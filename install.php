@@ -319,8 +319,7 @@ $data = $data ?? [
             <a href="/admin/login.php">Go to admin login &rarr;</a>
         </p>
         <p style="font-size:.85rem;color:#555;">
-            <strong>Security note:</strong> Delete or restrict access to
-            <code>install.php</code> now that setup is complete.
+            <strong>Security note:</strong> You may delete or restrict access to <code>install.php</code> now that setup is complete. To reset your installation, simply delete <code>config/config.php</code> and rerun <code>install.php</code>.
         </p>
     </div>
 
