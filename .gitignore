@@ -6,7 +6,8 @@ data/error.log
 cache/public/
 
 # Generated search index (rebuilt by builder)
-search/
+search/*
+!search/.gitkeep
 
 # Installation-generated config
 config/config.php

@@ -72,6 +72,7 @@ function required_writable_paths(): array
         BASE_PATH . '/config',
         BASE_PATH . '/data',
         BASE_PATH . '/cache',
+        BASE_PATH . '/search',
     ];
 }
 
@@ -339,7 +340,7 @@ $data = $data ?? [
         input:focus, select:focus { outline: 2px solid #3b82f6; border-color: #3b82f6; }
         .btn { display: inline-block; padding: .6rem 1.4rem; background: #3b82f6; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
         .btn:hover { background: #2563eb; }
-        .errors { background: #fee2e2; border: 1px solid #fca5a5; border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .errors { background: #fee2e2; border: 1px solid #fca5a5; border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 1rem; overflow-wrap: break-word; word-break: break-word; }
         .errors ul { margin: 0; padding-left: 1.2rem; }
         .errors li { margin-bottom: .25rem; font-size: .9rem; color: #991b1b; }
         .success { background: #dcfce7; border: 1px solid #86efac; border-radius: 4px; padding: 1.25rem; }
