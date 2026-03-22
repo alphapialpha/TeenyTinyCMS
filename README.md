@@ -20,7 +20,7 @@ The build step is the core of the system. When you run the builder (from the bro
 4. Renders each file through its template and writes a static PHP file to `cache/`
 5. Generates one tag index page per tag/language combination
 6. Generates static blog pagination pages (page 2, 3, …) for each language
-7. Writes a `search-index.{lang}.json` file per language for the client-side search feature
+7. Writes a `search/{lang}/index.json` file per language for the client-side search feature (served as a static file)
 
 The router just looks up the slug in the DB, gets the pre-rendered cache file path, and includes it. There is no template evaluation at request time.
 
@@ -47,9 +47,9 @@ For local development, PHP's built-in server works without any web server config
 
     php -S localhost:8080
 
-> **Note:** The built-in server does not support `.htaccess` rewrite rules.
-> Most pages will work, but features like the search index JSON route
-> require Apache. Use Apache (or a similar web server) for full functionality.
+> **Note:** The built-in server does not support `.htaccess` rewrite rules,
+> but all core features — including the search index — work correctly since
+> static files are served directly from disk.
 
 ### 2. Run the installer
 

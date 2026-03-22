@@ -641,14 +641,26 @@ function _builder_build_blog_pagination(): array
 /**
  * Pass 5: build a search-index JSON file per language.
  *
- * Reads every post's markdown source, strips HTML, and writes
- * cache/public/{lang}/search-index.json with slug, title, date, tags,
- * and a plain-text excerpt (~300 chars) per entry.
+ * Clears the search/ directory, then reads every post's markdown source,
+ * strips HTML, and writes search/{lang}/index.json with slug, title,
+ * date, tags, and a plain-text excerpt (~300 chars) per entry.
  *
  * @return array{built: int}
  */
 function _builder_build_search_index(): array
 {
+    // Clear previous search index files
+    $search_dir = BASE_PATH . '/search';
+    if (is_dir($search_dir)) {
+        $it = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($search_dir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($it as $item) {
+            $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
+        }
+    }
+
     $langs = db_fetch_all("SELECT DISTINCT lang FROM slugs WHERE type = 'post' ORDER BY lang ASC");
     $built = 0;
 
@@ -693,7 +705,7 @@ function _builder_build_search_index(): array
             ];
         }
 
-        $json_path = BASE_PATH . '/cache/public/' . $lang . '/search-index.json';
+        $json_path = BASE_PATH . '/search/' . $lang . '/index.json';
         _builder_ensure_dir(dirname($json_path));
 
         $json = json_encode($entries, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

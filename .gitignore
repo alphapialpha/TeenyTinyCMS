@@ -5,6 +5,9 @@ data/error.log
 # Generated cache (rebuild with php app/builder.php)
 cache/public/
 
+# Generated search index (rebuilt by builder)
+search/
+
 # Installation-generated config
 config/config.php
 

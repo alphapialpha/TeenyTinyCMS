@@ -27,7 +27,7 @@
         <?php if ($total_pages > 1): ?>
             <nav class="blog-page__pagination" aria-label="Pagination">
                 <?php
-                $base_url   = '/' . e($meta['lang'] ?? $lang ?? 'en') . '/blog';
+                $base_url   = url_for('/blog', $meta['lang'] ?? $lang ?? 'en');
                 $prev_label = t('prev', $lang ?? 'en');
                 $next_label = t('next', $lang ?? 'en');
                 ?>

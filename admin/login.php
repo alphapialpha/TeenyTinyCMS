@@ -11,7 +11,7 @@ auth_start();
 
 // Already logged in → go straight to dashboard
 if (is_logged_in()) {
-    header('Location: /admin/index.php');
+    header('Location: ' . BASE_URL . '/admin/index.php');
     exit;
 }
 
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (login($username, $password)) {
             // Regenerate CSRF token after successful login
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            header('Location: /admin/index.php');
+            header('Location: ' . BASE_URL . '/admin/index.php');
             exit;
         } else {
             $error = 'Invalid username or password.';
@@ -70,7 +70,7 @@ $csrf = $_SESSION['csrf_token'];
         <div class="error"><?= e($error) ?></div>
     <?php endif ?>
 
-    <form method="post" action="/admin/login.php" novalidate>
+    <form method="post" action="<?= e(BASE_URL) ?>/admin/login.php" novalidate>
         <input type="hidden" name="csrf_token" value="<?= e($csrf) ?>">
 
         <label for="username">Username</label>

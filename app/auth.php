@@ -118,6 +118,6 @@ function require_login(): void
 {
     if (!is_logged_in()) {
         http_response_code(403);
-        exit('403 – Access denied. Please <a href="/admin/login.php">log in</a>.');
+        exit('403 – Access denied. Please <a href="' . BASE_URL . '/admin/login.php">log in</a>.');
     }
 }

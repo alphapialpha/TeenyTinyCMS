@@ -52,7 +52,7 @@
 
         function loadIndex(cb) {
             if (index) return cb(index);
-            fetch('/' + lang + '/search-index.json')
+            fetch((typeof BASE_URL !== 'undefined' ? BASE_URL : '') + '/search/' + lang + '/index.json')
                 .then(function (r) { return r.json(); })
                 .then(function (data) { index = data; cb(data); })
                 .catch(function () {
@@ -87,7 +87,7 @@
 
                 var html = '<p class="search-results__count">' + countLabel + '</p>';
                 matches.forEach(function (item) {
-                    var url = '/' + lang + '/blog/' + encodeURIComponent(item.slug);
+                    var url = (typeof BASE_URL !== 'undefined' ? BASE_URL : '') + '/' + lang + '/blog/' + encodeURIComponent(item.slug);
                     html += '<div class="search-result-item">'
                          +  '<h3 class="search-result-item__title"><a href="' + url + '">' + escHtml(item.title) + '</a></h3>'
                          +  '<p class="search-result-item__meta">' + escHtml(item.date);

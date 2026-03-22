@@ -13,6 +13,24 @@ if (!defined('BASE_PATH')) {
     define('BASE_PATH', __DIR__ . '/..');
 }
 
+// Auto-detect the URL prefix when the CMS lives in a subdirectory.
+// e.g. domain.com/test/ → BASE_URL = '/test', domain root → BASE_URL = ''
+// Uses BASE_PATH's relation to DOCUMENT_ROOT for reliable detection,
+// regardless of which script (index.php, admin/login.php, etc.) is running.
+if (!defined('BASE_URL')) {
+    $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '';
+    $appRoot = realpath(BASE_PATH) ?: BASE_PATH;
+    if ($docRoot !== '' && str_starts_with($appRoot, $docRoot)) {
+        $prefix = substr($appRoot, strlen($docRoot));
+        define('BASE_URL', $prefix !== false && $prefix !== '' ? rtrim(str_replace('\\', '/', $prefix), '/') : '');
+    } else {
+        // Fallback: derive from SCRIPT_NAME relative to known file structure
+        $script = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
+        $base = preg_replace('#/(index\.php|install\.php|admin/.+\.php)$#', '', $script);
+        define('BASE_URL', $base === '' || $base === '/' ? '' : rtrim($base, '/'));
+    }
+}
+
 // 1. Config (may redirect to install.php if not installed)
 require_once BASE_PATH . '/app/config_loader.php';
 

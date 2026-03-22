@@ -69,7 +69,7 @@ function render_partial(string $name, array $vars = []): void
  */
 function asset(string $path): string
 {
-    return '/themes/' . active_theme() . '/assets/' . ltrim($path, '/');
+    return BASE_URL . '/themes/' . active_theme() . '/assets/' . ltrim($path, '/');
 }
 
 /**
@@ -87,8 +87,8 @@ function url_for(string $path, ?string $lang = null): string
     $path = '/' . ltrim($path, '/');
 
     if ($path === '/') {
-        return '/' . $lang . '/';
+        return BASE_URL . '/' . $lang . '/';
     }
 
-    return '/' . $lang . $path;
+    return BASE_URL . '/' . $lang . $path;
 }

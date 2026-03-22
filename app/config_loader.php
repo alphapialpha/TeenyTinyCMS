@@ -11,7 +11,7 @@ declare(strict_types=1);
         // Not installed yet – redirect to installer unless we already are there.
         $script = $_SERVER['SCRIPT_NAME'] ?? '';
         if (!str_ends_with($script, 'install.php')) {
-            header('Location: /install.php');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/install.php');
             exit;
         }
         return;

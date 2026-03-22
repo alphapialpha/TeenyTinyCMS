@@ -22,6 +22,7 @@
     <?php render_partial('language_switcher', ['lang' => $lang, 'slug' => $slug ?? '', 'type' => $type ?? '']) ?>
     <?php render_partial('footer', ['site_title' => $site_title]) ?>
 
+    <script>var BASE_URL = <?= json_encode(BASE_URL) ?>;</script>
     <script src="<?= asset('js/app.js') ?>"></script>
 </body>
 </html>

@@ -34,14 +34,14 @@ if (count($_available) <= 1) { return; }
     <?php
     if ($_fallback) {
         // No per-slug data — always link to the language homepage
-        $_href = '/' . $_l . '/';
+        $_href = url_for('/', $_l);
     } elseif ($_type === 'post') {
-        $_href = '/' . $_l . '/blog/' . rawurlencode($_slug);
+        $_href = url_for('/blog/' . rawurlencode($_slug), $_l);
     } elseif ($_slug !== '' && $_slug !== 'index') {
         // Encode each slug segment individually so '/' is preserved
-        $_href = '/' . $_l . '/' . implode('/', array_map('rawurlencode', explode('/', $_slug)));
+        $_href = url_for('/' . implode('/', array_map('rawurlencode', explode('/', $_slug))), $_l);
     } else {
-        $_href = '/' . $_l . '/';
+        $_href = url_for('/', $_l);
     }
     $_active = $_l === $_current_lang ? ' lang-link--active' : '';
     ?>

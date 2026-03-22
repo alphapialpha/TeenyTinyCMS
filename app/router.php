@@ -31,10 +31,18 @@ function route_request(): void
     $uri = rawurldecode((string) $uri);
     $uri = '/' . trim($uri, '/');
 
+    // Strip the subfolder prefix so routes always see /lang/slug
+    if (BASE_URL !== '' && str_starts_with($uri, BASE_URL)) {
+        $uri = substr($uri, strlen(BASE_URL));
+        if ($uri === '' || $uri === false) {
+            $uri = '/';
+        }
+    }
+
     // ── / → redirect to default language ─────────────────────────────────
     if ($uri === '/') {
         $lang = config('default_lang', 'en');
-        header('Location: /' . $lang . '/', true, 302);
+        header('Location: ' . BASE_URL . '/' . $lang . '/', true, 302);
         exit;
     }
 
@@ -44,18 +52,7 @@ function route_request(): void
         return;
     }
 
-    // ── /{lang}/search-index.json ─────────────────────────────────────────
-    if (preg_match('#^/([a-z]{2,5})/search-index\.json$#', $uri, $m)) {
-        $json_path = BASE_PATH . '/cache/public/' . $m[1] . '/search-index.json';
-        if (is_file($json_path)) {
-            header('Content-Type: application/json; charset=utf-8');
-            header('Cache-Control: public, max-age=3600');
-            readfile($json_path);
-            return;
-        }
-        _router_not_found();
-        return;
-    }
+    // Search index is served as a static file from /search/{lang}/index.json
 
     // ── URL segment parsing ───────────────────────────────────────────────
     // Strip leading slash and split
@@ -157,7 +154,7 @@ function _router_not_found(): void
     } else {
         echo '<!DOCTYPE html><html><head><title>404 Not Found</title></head>';
         echo '<body><h1>404 – Page not found</h1>';
-        echo '<p><a href="/">Go home</a></p></body></html>';
+        echo '<p><a href="' . e(BASE_URL) . '/">Go home</a></p></body></html>';
     }
     exit;
 }

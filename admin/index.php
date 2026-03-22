@@ -164,9 +164,9 @@ $csrf = $_SESSION['csrf_token'];
     <span>
         Logged in as <strong style="color:#fff"><?= e($user['username'] ?? '') ?></strong>
         &nbsp;·&nbsp;
-        <a href="/admin/logout.php">Sign out</a>
+        <a href="<?= e(BASE_URL) ?>/admin/logout.php">Sign out</a>
         &nbsp;·&nbsp;
-        <a href="/">View site &rarr;</a>
+        <a href="<?= e(BASE_URL) ?>/">View site &rarr;</a>
     </span>
 </div>
 <div class="content">
@@ -191,7 +191,7 @@ $csrf = $_SESSION['csrf_token'];
         <?php if (count($available_themes) <= 1): ?>
             <p style="font-size:.9rem;color:#64748b">Only one theme installed (<strong><?= e($current_theme) ?></strong>). Drop a folder into <code>/themes/</code> to add more.</p>
         <?php else: ?>
-        <form method="post" action="/admin/index.php" style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+        <form method="post" action="<?= e(BASE_URL) ?>/admin/index.php" style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
             <input type="hidden" name="csrf_token" value="<?= e($csrf) ?>">
             <input type="hidden" name="action" value="set_theme">
             <select name="theme">
@@ -209,7 +209,7 @@ $csrf = $_SESSION['csrf_token'];
     <div class="card">
         <h2>Rebuild Site Cache</h2>
         <p style="color:#64748b;font-size:.9rem;margin-top:0">Re-parses all Markdown files in <code>/content</code>, regenerates cached PHP files in <code>/cache</code>, and syncs DB metadata.</p>
-        <form method="post" action="/admin/index.php">
+        <form method="post" action="<?= e(BASE_URL) ?>/admin/index.php">
             <input type="hidden" name="csrf_token" value="<?= e($csrf) ?>">
             <input type="hidden" name="action" value="rebuild">
             <button type="submit" class="btn">Rebuild now</button>

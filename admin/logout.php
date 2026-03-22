@@ -10,5 +10,5 @@ require_once __DIR__ . '/../app/bootstrap.php';
 
 logout();
 
-header('Location: /admin/login.php');
+header('Location: ' . BASE_URL . '/admin/login.php');
 exit;

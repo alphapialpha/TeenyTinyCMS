@@ -1,30 +1,27 @@
 Options -Indexes
 
 # ── Block direct access to sensitive directories ──────────────────────────────
-# These must never be served directly by Apache, regardless of whether the
-# files exist on disk.
-<DirectoryMatch "^(.+/)?(app|config|data|cache|content)(/|$)">
-    Require all denied
-</DirectoryMatch>
+# RewriteRule-based blocks work in .htaccess (unlike <DirectoryMatch>).
+# Applies whether the CMS runs at the domain root or in a subfolder.
+RewriteEngine On
+
+# Block app/, config/, data/, cache/, content/ directories
+RewriteRule (^|/)(?:app|config|data|cache|content)(/|$) - [F,L]
 
 # Block theme template directories — assets are public, templates are not
-<DirectoryMatch "^(.+/)?themes/[^/]+/templates(/|$)">
-    Require all denied
-</DirectoryMatch>
+RewriteRule (^|/)themes/[^/]+/templates(/|$) - [F,L]
 
 # Block dotfiles (e.g. .htaccess itself if someone guesses the path)
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
 
-# Block spec / markdown files in the root
-<FilesMatch "\.(md|sql|sh|lock|json|yaml|yml)$">
+# Block spec / markdown / config files
+<FilesMatch "\.(md|sql|sh|lock|yaml|yml)$">
     Require all denied
 </FilesMatch>
 
 # ── Front controller ──────────────────────────────────────────────────────────
-RewriteEngine On
-
 # Serve existing files and directories directly (assets/, admin/ PHP files, etc.)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
