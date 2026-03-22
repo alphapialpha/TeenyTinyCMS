@@ -657,6 +657,7 @@ function _builder_build_search_index(): array
             RecursiveIteratorIterator::CHILD_FIRST
         );
         foreach ($it as $item) {
+            if ($item->getFilename() === '.gitkeep') continue;
             $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
         }
     }

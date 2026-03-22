@@ -1,5 +1,5 @@
 # Runtime data
-data/database.sqlite
+data/*.sqlite
 data/error.log
 
 # Generated cache (rebuild with php app/builder.php)
